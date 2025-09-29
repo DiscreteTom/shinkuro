@@ -22,6 +22,30 @@ Add to your MCP client configuration:
 }
 ```
 
+Or use a GitHub repository:
+
+```json
+{
+  "mcpServers": {
+    "shinkuro": {
+      "command": "uvx",
+      "args": ["shinkuro"],
+      "env": {
+        "GITHUB_REPO": "owner/repo",
+        "FOLDER": "" // optional, subfolder of the github repo
+      }
+    }
+  }
+}
+```
+
+### Environment Variables
+
+- `FOLDER`: Path to local folder containing markdown files, or subfolder within GitHub repo
+- `GITHUB_REPO`: GitHub repository in format "owner/repo"
+- `CACHE_DIR`: Directory to cache cloned repositories (optional, defaults to `~/.shinkuro/remote`)
+- `AUTO_PULL`: Whether to pull latest changes if repo exists locally (optional, defaults to false)
+
 ## Prompts
 
 ### Loading
