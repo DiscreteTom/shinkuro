@@ -30,9 +30,8 @@ def clone_or_update_repo(github_repo: str) -> str:
     cache_dir = get_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    # Create local directory name from repo
-    repo_name = github_repo.replace("/", "_")
-    local_path = cache_dir / repo_name
+    # Create local directory path maintaining original structure
+    local_path = cache_dir / "github" / github_repo
 
     github_url_ssh = f"git@github.com:{github_repo}.git"
     github_url_https = f"https://github.com/{github_repo}.git"
