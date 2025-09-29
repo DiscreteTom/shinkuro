@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace `GITHUB_REPO` environment variable with `GIT_URL` for broader git repository support
+- Update cache directory structure from `~/.shinkuro/remote/github/{owner}/{repo}` to `~/.shinkuro/remote/git/{repo_name}`
+- Support any git URL format (GitHub, GitLab, SSH, HTTPS with credentials)
+
 ## [0.1.0] - 2025-09-29
 
 ### Added

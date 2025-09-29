@@ -8,13 +8,13 @@ from .utils.github import clone_or_update_repo
 
 def main():
     """Start the shinkuro MCP server."""
-    github_repo = os.getenv("GITHUB_REPO")
+    git_url = os.getenv("GIT_URL")
     folder = os.getenv("FOLDER")
 
-    if github_repo:
-        # Clone/update GitHub repo and use as folder
+    if git_url:
+        # Clone/update git repo and use as folder
         try:
-            repo_path = clone_or_update_repo(github_repo)
+            repo_path = clone_or_update_repo(git_url)
             if folder:
                 # Use FOLDER as subfolder within the repo
                 folder = os.path.join(repo_path, folder)
@@ -25,7 +25,7 @@ def main():
             sys.exit(1)
     elif not folder:
         print(
-            "Error: Either FOLDER or GITHUB_REPO environment variable is required",
+            "Error: Either FOLDER or GIT_URL environment variable is required",
             file=sys.stderr,
         )
         sys.exit(1)

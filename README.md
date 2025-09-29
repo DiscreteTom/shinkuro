@@ -24,7 +24,7 @@ Add to your MCP client configuration:
 }
 ```
 
-### GitHub Repository
+### Git Repository
 
 Add to your MCP client configuration:
 
@@ -35,8 +35,8 @@ Add to your MCP client configuration:
       "command": "uvx",
       "args": ["shinkuro"],
       "env": {
-        "GITHUB_REPO": "owner/repo",
-        "FOLDER": "" // optional, subfolder within github repo
+        "GIT_URL": "https://github.com/owner/repo.git",
+        "FOLDER": "" // optional, subfolder within git repo
       }
     }
   }
@@ -47,8 +47,8 @@ Add to your MCP client configuration:
 
 ### Environment Variables
 
-- `FOLDER`: Path to local folder containing markdown files, or subfolder within GitHub repo
-- `GITHUB_REPO`: GitHub repository in format `owner/repo`
+- `FOLDER`: Path to local folder containing markdown files, or subfolder within git repo
+- `GIT_URL`: Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials)
 - `CACHE_DIR`: Directory to cache cloned repositories (optional, defaults to `~/.shinkuro/remote`)
 - `AUTO_PULL`: Whether to pull latest changes if repo exists locally (optional, defaults to `false`)
 

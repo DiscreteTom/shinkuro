@@ -1,4 +1,4 @@
-"""GitHub repository loader with local caching."""
+"""Git repository loader with local caching."""
 
 import os
 from pathlib import Path
@@ -17,12 +17,12 @@ def get_cache_dir() -> Path:
     return home / ".shinkuro" / "remote"
 
 
-def clone_or_update_repo(github_repo: str) -> str:
+def clone_or_update_repo(git_url: str) -> str:
     """
-    Clone or update a GitHub repository and return the local path.
+    Clone or update a git repository and return the local path.
 
     Args:
-        github_repo: GitHub repository in format "owner/repo"
+        git_url: Git repository URL
 
     Returns:
         Local path to the cloned repository
@@ -30,11 +30,18 @@ def clone_or_update_repo(github_repo: str) -> str:
     cache_dir = get_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    # Create local directory path maintaining original structure
-    local_path = cache_dir / "github" / github_repo
+    # Extract repo name using Path.stem
+    repo_name = Path(git_url.rstrip("/")).stem
+    if not repo_name:
+        raise ValueError(f"Invalid git URL: {git_url}")
 
-    github_url_ssh = f"git@github.com:{github_repo}.git"
-    github_url_https = f"https://github.com/{github_repo}.git"
+    # Remove .git suffix if present
+    if repo_name.endswith(".git"):
+        repo_name = repo_name[:-4]
+
+    # Create local directory path: ~/.shinkuro/remote/git/{repo_name}
+    local_path = cache_dir / "git" / repo_name
+
     auto_pull = os.getenv("AUTO_PULL", "false").lower() == "true"
 
     try:
@@ -44,13 +51,10 @@ def clone_or_update_repo(github_repo: str) -> str:
                 repo = Repo(local_path)
                 repo.remotes.origin.pull()
         else:
-            # Try SSH first, fallback to HTTPS
-            try:
-                Repo.clone_from(github_url_ssh, local_path, depth=1)
-            except GitCommandError:
-                Repo.clone_from(github_url_https, local_path, depth=1)
+            # Clone repository
+            Repo.clone_from(git_url, local_path, depth=1)
 
         return str(local_path)
 
     except GitCommandError as e:
-        raise RuntimeError(f"Failed to clone/update repository {github_repo}: {e}")
+        raise RuntimeError(f"Failed to clone/update repository {git_url}: {e}")
