@@ -1,20 +1,10 @@
-"""Git repository loader with local caching."""
+"""Git repository cloning and caching."""
 
 import os
-from pathlib import Path
 from git import Repo
 from git.exc import GitCommandError
-
-
-def get_cache_dir() -> Path:
-    """Get the cache directory for storing cloned repositories."""
-    cache_dir = os.getenv("CACHE_DIR")
-    if cache_dir:
-        return Path(cache_dir)
-
-    # Default to ~/.shinkuro/remote
-    home = Path.home()
-    return home / ".shinkuro" / "remote"
+from pathlib import Path
+from .utils import get_cache_dir
 
 
 def clone_or_update_repo(git_url: str) -> str:

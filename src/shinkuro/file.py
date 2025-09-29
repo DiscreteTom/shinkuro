@@ -1,4 +1,4 @@
-"""File-based prompt loader."""
+"""Local file-based prompt loader."""
 
 import frontmatter
 from pathlib import Path

@@ -1,7 +1,7 @@
 """Main MCP server for prompt management."""
 
 from fastmcp import FastMCP
-from .utils.file import scan_markdown_files
+from .file import scan_markdown_files
 
 
 def create_prompt_function(mcp: FastMCP, name: str, content: str, description: str):

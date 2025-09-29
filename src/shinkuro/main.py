@@ -3,7 +3,7 @@
 import os
 import sys
 from .server import create_server
-from .utils.github import clone_or_update_repo
+from .remote.git import clone_or_update_repo
 
 
 def main():
