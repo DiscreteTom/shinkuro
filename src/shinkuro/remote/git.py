@@ -3,8 +3,18 @@
 import os
 from git import Repo
 from git.exc import GitCommandError
-from pathlib import Path
 from .utils import get_cache_dir
+from giturlparse import parse
+
+
+def extract_user_repo(git_url: str) -> tuple[str, str]:
+    """Extract user and repo name from git URL."""
+
+    parsed = parse(git_url)
+    if not parsed.user or not parsed.name:
+        raise ValueError(f"Cannot extract user/repo from git URL: {git_url}")
+
+    return parsed.user, parsed.name
 
 
 def clone_or_update_repo(git_url: str) -> str:
@@ -20,17 +30,11 @@ def clone_or_update_repo(git_url: str) -> str:
     cache_dir = get_cache_dir()
     cache_dir.mkdir(parents=True, exist_ok=True)
 
-    # Extract repo name using Path.stem
-    repo_name = Path(git_url.rstrip("/")).stem
-    if not repo_name:
-        raise ValueError(f"Invalid git URL: {git_url}")
+    # Extract user and repo name
+    user, repo = extract_user_repo(git_url)
 
-    # Remove .git suffix if present
-    if repo_name.endswith(".git"):
-        repo_name = repo_name[:-4]
-
-    # Create local directory path: ~/.shinkuro/remote/git/{repo_name}
-    local_path = cache_dir / "git" / repo_name
+    # Create local directory path: ~/.shinkuro/remote/git/{user}/{repo}
+    local_path = cache_dir / "git" / user / repo
 
     auto_pull = os.getenv("AUTO_PULL", "false").lower() == "true"
 

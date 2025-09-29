@@ -366,6 +366,15 @@ wheels = [
 ]
 
 [[package]]
+name = "giturlparse"
+version = "0.12.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/37/5f/543dc54c82842376139748226e5aa61eb95093992f63dd495af9c6b4f076/giturlparse-0.12.0.tar.gz", hash = "sha256:c0fff7c21acc435491b1779566e038757a205c1ffdcb47e4f81ea52ad8c3859a", size = 14907 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/dd/94/c6ff3388b8e3225a014e55aed957188639aa0966443e0408d38f0c9614a7/giturlparse-0.12.0-py2.py3-none-any.whl", hash = "sha256:412b74f2855f1da2fefa89fd8dde62df48476077a72fc19b62039554d27360eb", size = 15752 },
+]
+
+[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1129,6 +1138,7 @@ source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },
     { name = "gitpython" },
+    { name = "giturlparse" },
     { name = "python-frontmatter" },
 ]
 
@@ -1145,6 +1155,7 @@ dev = [
 requires-dist = [
     { name = "fastmcp", specifier = ">=2.12.4" },
     { name = "gitpython", specifier = ">=3.1.0" },
+    { name = "giturlparse", specifier = ">=0.12.0" },
     { name = "python-frontmatter", specifier = ">=1.1.0" },
 ]
 
