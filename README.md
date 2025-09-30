@@ -58,16 +58,19 @@ Add to your MCP client configuration:
 
 ## Prompt Loading
 
-Each markdown file in the specified folder is loaded as a prompt.
+Each markdown file in the specified folder (including nested folders) is loaded as a prompt.
 
 Example folder structure:
 
 ```
 my-prompts/
-├── code-review.md
-├── dev.md
-└── commit.md
+├── think.md
+└── dev/
+     ├── code-review.md
+     └── commit.md
 ```
+
+The example above will be loaded to 3 prompts: `think`, `code-review` and `commit`.
 
 ## Example Prompt Files
 
