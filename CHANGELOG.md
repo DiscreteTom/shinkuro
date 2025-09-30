@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for prompt arguments with variable replacement using `{variable}` format in templates
 - Escape literal brackets using double brackets (`{{var}}`)
+- Support for `title` field in frontmatter (defaults to filename)
 
 ## [0.2.0] - 2025-09-29
 

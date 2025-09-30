@@ -13,6 +13,7 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
 
         @mcp.prompt(
             name=prompt_data.name,
+            title=prompt_data.title,
             description=prompt_data.description,
             tags={"shinkuro"},
             meta={},
@@ -48,11 +49,12 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
 
         # Create function code
         escaped_name = repr(prompt_data.name)
+        escaped_title = repr(prompt_data.title)
         escaped_description = repr(prompt_data.description)
         escaped_content = repr(prompt_data.content)
 
         func_code = f"""
-@mcp.prompt(name={escaped_name}, description={escaped_description}, tags={{"shinkuro"}}, meta={{}})
+@mcp.prompt(name={escaped_name}, title={escaped_title}, description={escaped_description}, tags={{"shinkuro"}}, meta={{}})
 def prompt_func({param_str}) -> str:
 {defaults_code}
     return {escaped_content}.format({", ".join(f"{arg.name}={arg.name}" for arg in prompt_data.arguments)})

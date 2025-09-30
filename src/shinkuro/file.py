@@ -16,9 +16,10 @@ class Argument:
 @dataclass
 class PromptData:
     name: str
-    content: str
+    title: str
     description: str
     arguments: List[Argument]
+    content: str
 
 
 def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
@@ -49,6 +50,13 @@ def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
 
             content = post.content
 
+            # Get title from frontmatter, ensure it's a string, default to filename
+            title_data = post.metadata.get("title")
+            if isinstance(title_data, str):
+                title = title_data
+            else:
+                title = md_file.stem
+
             # Get description from frontmatter, ensure it's a string
             desc = post.metadata.get("description")
             if isinstance(desc, str):
@@ -72,6 +80,6 @@ def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
                         )
                     )
 
-            yield PromptData(name, content, description, arguments)
+            yield PromptData(name, title, description, arguments, content)
         except Exception:
             continue

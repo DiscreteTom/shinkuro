@@ -80,6 +80,7 @@ Commit to git using conventional commit.
 ```markdown
 ---
 name: "code-review" # optional, defaults to filename
+title: "Code Review Assistant" # optional, defaults to filename
 description: "" # optional, defaults to file path
 ---
 
