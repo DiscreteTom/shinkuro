@@ -12,7 +12,7 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
         @mcp.prompt(
             name=prompt_data.name,
             description=prompt_data.description,
-            tags={"local"},
+            tags={"shinkuro"},
             meta={},
         )
         def prompt_func() -> str:
@@ -43,7 +43,7 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
 
         func_code = f"""
 from pydantic import Field
-@mcp.prompt(name={escaped_name}, description={escaped_description}, tags={{"local"}}, meta={{}})
+@mcp.prompt(name={escaped_name}, description={escaped_description}, tags={{"shinkuro"}}, meta={{}})
 def prompt_func({param_str}) -> str:
     return {escaped_content}.format({", ".join(f"{arg.name}={arg.name}" for arg in prompt_data.arguments)})
 """
