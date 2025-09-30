@@ -54,9 +54,7 @@ Add to your MCP client configuration:
 - `CACHE_DIR`: Directory to cache cloned repositories (optional, defaults to `~/.shinkuro/remote`)
 - `AUTO_PULL`: Whether to pull latest changes if repo exists locally (optional, defaults to `false`)
 
-## Prompts
-
-### Loading
+## Prompt Loading
 
 Each markdown file in the specified folder is loaded as a prompt.
 
@@ -69,15 +67,43 @@ my-prompts/
 └── commit.md
 ```
 
-### Example Prompt File
+## Example Prompt Files
+
+### Simplest
+
+```markdown
+Commit to git using conventional commit.
+```
+
+### Prompt with Metadata
 
 ```markdown
 ---
-name: "" # optional, defaults to filename
+name: "code-review" # optional, defaults to filename
 description: "" # optional, defaults to file path
 ---
 
-# Prompt Content
+# Code Review
 
-Your prompt content here...
+Please review this code for best practices and potential issues.
 ```
+
+### Prompt with Arguments
+
+```markdown
+---
+name: "greeting"
+description: "Generate a personalized greeting message"
+arguments:
+  - name: "user"
+    description: "Name of the user"
+    # no default = required parameter
+  - name: "project"
+    description: "Project name"
+    default: "MyApp"
+---
+
+Say: Hello {user}! Welcome to {project}. Hope you enjoy your stay!
+```
+
+Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved. Use `{{var}}` (double brackets) to escape and display literal brackets.

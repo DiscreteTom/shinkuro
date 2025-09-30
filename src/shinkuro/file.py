@@ -2,10 +2,26 @@
 
 import frontmatter
 from pathlib import Path
-from typing import Iterator, Tuple
+from typing import Iterator, List, Optional
+from dataclasses import dataclass
 
 
-def scan_markdown_files(folder_path: str) -> Iterator[Tuple[str, str, str]]:
+@dataclass
+class Argument:
+    name: str
+    description: str
+    default: Optional[str] = None
+
+
+@dataclass
+class PromptData:
+    name: str
+    content: str
+    description: str
+    arguments: List[Argument]
+
+
+def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
     """
     Scan folder recursively for markdown files.
 
@@ -13,7 +29,7 @@ def scan_markdown_files(folder_path: str) -> Iterator[Tuple[str, str, str]]:
         folder_path: Path to folder to scan
 
     Yields:
-        Tuple of (name, content, description) for each markdown file
+        PromptData for each markdown file
     """
     folder = Path(folder_path)
     if not folder.exists() or not folder.is_dir():
@@ -30,6 +46,7 @@ def scan_markdown_files(folder_path: str) -> Iterator[Tuple[str, str, str]]:
                 name = frontmatter_name
             else:
                 name = md_file.stem
+
             content = post.content
 
             # Get description from frontmatter, ensure it's a string
@@ -39,6 +56,22 @@ def scan_markdown_files(folder_path: str) -> Iterator[Tuple[str, str, str]]:
             else:
                 description = f"Prompt from {md_file.relative_to(folder)}"
 
-            yield name, content, description
+            # Get arguments from frontmatter
+            arguments_data = post.metadata.get("arguments", [])
+            if not isinstance(arguments_data, list):
+                arguments_data = []
+
+            arguments = []
+            for arg_data in arguments_data:
+                if isinstance(arg_data, dict):
+                    arguments.append(
+                        Argument(
+                            name=arg_data.get("name", ""),
+                            description=arg_data.get("description", ""),
+                            default=arg_data.get("default"),
+                        )
+                    )
+
+            yield PromptData(name, content, description, arguments)
         except Exception:
             continue
