@@ -2,11 +2,13 @@
 
 ![PyPI - Version](https://img.shields.io/pypi/v/shinkuro)
 
-Loads markdown files from a local folder or git repository and serves them as [MCP prompts](https://modelcontextprotocol.io/specification/2025-06-18/server/prompts).
+Loads markdown files from a local folder or git repository and serves them as [MCP Prompts](https://modelcontextprotocol.io/specification/2025-06-18/server/prompts).
 
 Useful when you need to share prompts across organizations.
 
 ## Usage
+
+**IMPORTANT**: make sure your MCP client supports the MCP Prompts capability. See the [feature support matrix](https://modelcontextprotocol.io/clients#feature-support-matrix).
 
 ### Local Files
 
