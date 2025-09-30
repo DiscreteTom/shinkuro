@@ -2,6 +2,8 @@
 
 from fastmcp import FastMCP
 from .file import scan_markdown_files, PromptData
+from pydantic import Field
+from pydantic.fields import FieldInfo
 
 
 def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
@@ -21,6 +23,7 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
     else:
         # Build function signature dynamically
         params = []
+        defaults = []
         for arg in prompt_data.arguments:
             escaped_arg_desc = repr(arg.description)
 
@@ -33,8 +36,15 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
                 params.append(
                     f"{arg.name}: str = Field(description={escaped_arg_desc}, default={escaped_arg_default})"
                 )
+                defaults.append(
+                    f"""
+    if isinstance({arg.name}, FieldInfo):
+        {arg.name} = {escaped_arg_default}
+"""
+                )
 
         param_str = ", ".join(params)
+        defaults_code = "\n".join(defaults)
 
         # Create function code
         escaped_name = repr(prompt_data.name)
@@ -42,14 +52,14 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
         escaped_content = repr(prompt_data.content)
 
         func_code = f"""
-from pydantic import Field
 @mcp.prompt(name={escaped_name}, description={escaped_description}, tags={{"shinkuro"}}, meta={{}})
 def prompt_func({param_str}) -> str:
+{defaults_code}
     return {escaped_content}.format({", ".join(f"{arg.name}={arg.name}" for arg in prompt_data.arguments)})
 """
 
         # Execute the function creation
-        exec(func_code)
+        exec(func_code, locals={"mcp": mcp, "Field": Field, "FieldInfo": FieldInfo})
 
 
 def setup_file_prompts(mcp: FastMCP, folder_path: str) -> None:
