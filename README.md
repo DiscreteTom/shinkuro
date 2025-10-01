@@ -40,7 +40,7 @@ Add to your MCP client configuration:
       "args": ["shinkuro"],
       "env": {
         "GIT_URL": "https://github.com/owner/repo.git",
-        "FOLDER": "" // optional, subfolder within git repo
+        "FOLDER": "prompts" // optional, subfolder within git repo
       }
     }
   }
@@ -113,3 +113,9 @@ Say: Hello {user}! Welcome to {project}. Hope you enjoy your stay!
 ```
 
 Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved. Use `{{var}}` (double brackets) to escape and display literal brackets.
+
+## Example Prompt Repositories
+
+- [DiscreteTom/prompts](https://github.com/DiscreteTom/prompts).
+
+## [CHANGELOG](./CHANGELOG.md)
