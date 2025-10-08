@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- New `security.py` module with validation functions for path traversal prevention and identifier validation
+- `SafeFormatter` class to prevent attribute/item access in format strings
+- Comprehensive test suite with 64 tests covering security, server, git, file scanning, and integration
+- Test documentation in `tests/README.md`
+- Pytest configuration with coverage reporting
+- Development and Security sections in README
+
+### Fixed
+
+- **Security**: Path traversal attacks via `FOLDER` and `CACHE_DIR` environment variables
+- **Security**: Code injection risks in dynamic function generation via argument name validation
+- **Security**: Format string attribute access attacks using `SafeFormatter`
+- **Security**: Path component validation for git URL user/repo names
+- Git URL parsing to use `parsed.owner` instead of `parsed.user` (giturlparse compatibility)
+- AttributeError handling for malformed git URLs
+- Function parameter ordering to satisfy Pydantic validation (required before optional arguments)
+- Error logging in file scanner instead of silent exception suppression
+
+### Changed
+
+- Git URL validation now includes defense-in-depth path component checks
+- Prompts with invalid/dangerous argument names are now skipped instead of failing silently
+
 ## [0.3.0] - 2025-09-30
 
 ### Added
