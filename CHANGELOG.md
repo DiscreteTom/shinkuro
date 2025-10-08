@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace unsafe dynamic code execution with safe MarkdownPrompt class for prompt rendering
+
+### Security
+
+- Add validation to prevent format string injection attacks in template variables
+- Only allow alphanumeric and underscore characters in variable names (e.g., `{name}`, `{project_name}`)
+- Block dangerous expressions like `{name.__class__}` or `{name[0]}` at file loading time
+
 ## [0.3.0] - 2025-09-30
 
 ### Added

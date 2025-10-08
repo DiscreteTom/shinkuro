@@ -1,6 +1,8 @@
 """Local file-based prompt loader."""
 
 import frontmatter
+import re
+import string
 from pathlib import Path
 from typing import Iterator, List, Optional
 from dataclasses import dataclass
@@ -19,7 +21,7 @@ class PromptData:
     title: str
     description: str
     arguments: List[Argument]
-    content: str
+    content: str  # Safe template content validated for secure variable substitution
 
 
 def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
@@ -49,6 +51,19 @@ def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
                 name = md_file.stem
 
             content = post.content
+
+            # Validate format fields are safe (only alphanumeric and underscore)
+            formatter = string.Formatter()
+            is_safe = True
+            for literal_text, field_name, format_spec, conversion in formatter.parse(
+                content
+            ):
+                if field_name and not re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*$", field_name):
+                    is_safe = False
+                    break
+
+            if not is_safe:
+                continue  # Skip this file
 
             # Get title from frontmatter, ensure it's a string, default to filename
             title_data = post.metadata.get("title")
