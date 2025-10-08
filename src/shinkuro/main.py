@@ -13,8 +13,9 @@ def main():
     git_url = os.getenv("GIT_URL")
     folder = os.getenv("FOLDER")
 
+    mcp = FastMCP(name="shinkuro")
+
     if git_url:
-        # Get local repo path and clone/update
         repo_path = get_local_cache_path(git_url)
         clone_or_update_repo(git_url, repo_path)
 
@@ -32,7 +33,6 @@ def main():
             sys.exit(1)
         folder_path = Path(folder)
 
-    mcp = FastMCP(name="shinkuro")
     load_file_prompts(mcp, folder_path)
     mcp.run()
 

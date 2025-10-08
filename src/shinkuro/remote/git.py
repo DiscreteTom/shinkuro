@@ -34,12 +34,8 @@ def clone_or_update_repo(git_url: str, local_path: Path) -> None:
         git_url: Git repository URL
         local_path: Local path to clone/update the repository
     """
-    cache_dir = get_cache_dir()
-    cache_dir.mkdir(parents=True, exist_ok=True)
-
-    auto_pull = os.getenv("AUTO_PULL", "false").lower() == "true"
-
     if local_path.exists():
+        auto_pull = os.getenv("AUTO_PULL", "false").lower() == "true"
         if auto_pull:
             repo = Repo(local_path)
             repo.remotes.origin.pull()
