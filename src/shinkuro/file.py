@@ -1,6 +1,7 @@
 """Local file-based prompt loader."""
 
 import frontmatter
+import sys
 from pathlib import Path
 from typing import Iterator, List, Optional
 from dataclasses import dataclass
@@ -81,5 +82,10 @@ def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
                     )
 
             yield PromptData(name, title, description, arguments, content)
-        except Exception:
+        except Exception as e:
+            # Log error but continue processing other files
+            print(
+                f"Warning: Failed to process {md_file}: {type(e).__name__}: {e}",
+                file=sys.stderr,
+            )
             continue
