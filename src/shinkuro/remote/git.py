@@ -5,6 +5,7 @@ from git import Repo
 from git.exc import GitCommandError
 from .utils import get_cache_dir
 from giturlparse import parse
+from ..security import validate_path_component
 
 
 def extract_user_repo(git_url: str) -> tuple[str, str]:
@@ -13,6 +14,13 @@ def extract_user_repo(git_url: str) -> tuple[str, str]:
     parsed = parse(git_url)
     if not parsed.user or not parsed.name:
         raise ValueError(f"Cannot extract user/repo from git URL: {git_url}")
+
+    # Validate path components to prevent traversal
+    try:
+        validate_path_component(parsed.user)
+        validate_path_component(parsed.name)
+    except ValueError as e:
+        raise ValueError(f"Invalid git URL path component: {e}")
 
     return parsed.user, parsed.name
 
