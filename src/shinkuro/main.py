@@ -5,6 +5,7 @@ import sys
 from .file.load import load_file_prompts
 from .remote.git import get_local_cache_path, clone_or_update_repo
 from fastmcp import FastMCP
+from pathlib import Path
 
 
 def main():
@@ -19,18 +20,20 @@ def main():
 
         if folder:
             # Use FOLDER as subfolder within the repo
-            folder = str(repo_path / folder)
+            folder_path = repo_path / folder
         else:
-            folder = str(repo_path)
-    elif not folder:
-        print(
-            "Error: Either FOLDER or GIT_URL environment variable is required",
-            file=sys.stderr,
-        )
-        sys.exit(1)
+            folder_path = repo_path
+    else:
+        if not folder:
+            print(
+                "Error: Either FOLDER or GIT_URL environment variable is required",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+        folder_path = Path(folder)
 
     mcp = FastMCP(name="shinkuro")
-    load_file_prompts(mcp, folder)
+    load_file_prompts(mcp, folder_path)
     mcp.run()
 
 

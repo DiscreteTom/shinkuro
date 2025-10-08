@@ -9,7 +9,7 @@ from typing import Iterator
 from ..model import Argument, PromptData
 
 
-def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
+def scan_markdown_files(folder: Path) -> Iterator[PromptData]:
     """
     Scan folder recursively for markdown files.
 
@@ -19,10 +19,9 @@ def scan_markdown_files(folder_path: str) -> Iterator[PromptData]:
     Yields:
         PromptData for each markdown file
     """
-    folder = Path(folder_path)
     if not folder.exists() or not folder.is_dir():
         print(
-            f"Warning: folder path '{folder_path}' does not exist or is not a directory",
+            f"Warning: folder path '{str(folder)}' does not exist or is not a directory",
             file=sys.stderr,
         )
         return
