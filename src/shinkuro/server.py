@@ -49,9 +49,16 @@ def create_prompt_function(mcp: FastMCP, prompt_data: PromptData):
                 return
 
         # Build function signature dynamically
+        # Sort arguments: required (no default) first, then optional (with default)
+        required_args = [arg for arg in prompt_data.arguments if arg.default is None]
+        optional_args = [
+            arg for arg in prompt_data.arguments if arg.default is not None
+        ]
+        sorted_args = required_args + optional_args
+
         params = []
         defaults = []
-        for arg in prompt_data.arguments:
+        for arg in sorted_args:
             escaped_arg_desc = repr(arg.description)
 
             if arg.default is None:

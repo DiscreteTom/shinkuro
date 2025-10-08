@@ -12,17 +12,24 @@ def extract_user_repo(git_url: str) -> tuple[str, str]:
     """Extract user and repo name from git URL."""
 
     parsed = parse(git_url)
-    if not parsed.user or not parsed.name:
+    # Use owner for the username/organization, name for the repo
+    try:
+        owner = parsed.owner
+        name = parsed.name
+    except AttributeError:
+        raise ValueError(f"Cannot extract user/repo from git URL: {git_url}")
+
+    if not owner or not name:
         raise ValueError(f"Cannot extract user/repo from git URL: {git_url}")
 
     # Validate path components to prevent traversal
     try:
-        validate_path_component(parsed.user)
-        validate_path_component(parsed.name)
+        validate_path_component(owner)
+        validate_path_component(name)
     except ValueError as e:
         raise ValueError(f"Invalid git URL path component: {e}")
 
-    return parsed.user, parsed.name
+    return owner, name
 
 
 def clone_or_update_repo(git_url: str) -> str:
