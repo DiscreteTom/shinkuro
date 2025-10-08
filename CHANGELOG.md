@@ -7,12 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
+## [0.3.1] - 2025-10-08
 
-- Replace unsafe dynamic code execution with safe MarkdownPrompt class for prompt rendering
+### Added
+
+- Comprehensive validation and warning system for frontmatter fields
+- Automatic type conversion for non-string fields with stderr warnings
+- Validation for argument names (must contain only alphanumeric and underscore characters)
+- Required validation for argument names (skip arguments without valid names)
+- Detailed error messages for invalid folder paths, unsafe template variables, and processing exceptions
 
 ### Security
 
+- Replace unsafe dynamic code execution with safe MarkdownPrompt class for prompt rendering
 - Add validation to prevent format string injection attacks in template variables
 - Only allow alphanumeric and underscore characters in variable names (e.g., `{name}`, `{project_name}`)
 - Block dangerous expressions like `{name.__class__}` or `{name[0]}` at file loading time
