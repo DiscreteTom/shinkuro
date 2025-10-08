@@ -28,7 +28,7 @@ Add to your MCP client configuration:
 }
 ```
 
-### Git Repository
+### Remote Git Repository
 
 Add to your MCP client configuration:
 
@@ -49,12 +49,14 @@ Add to your MCP client configuration:
 
 > This will clone the repository into a local cache dir. Make sure you have correct permission.
 
+> Private repositories are supported, e.g. `"GIT_URL": "git@github.com:DiscreteTom/shinkuro.git"` (with SSH keys), `"GIT_URL": "https://<username>:<PAT>@github.com/owner/repo.git"` (with personal access token)
+
 ### Environment Variables
 
 - `FOLDER`: Path to local folder containing markdown files, or subfolder within git repo
 - `GIT_URL`: Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials)
-- `CACHE_DIR`: Directory to cache cloned repositories (optional, defaults to `~/.shinkuro/remote`)
-- `AUTO_PULL`: Whether to pull latest changes if repo exists locally (optional, defaults to `false`)
+- `CACHE_DIR`: Directory to cache remote repositories (optional, defaults to `~/.shinkuro/remote`)
+- `AUTO_PULL`: Whether to refresh local cache on startup (optional, defaults to `false`)
 
 ## Prompt Loading
 
