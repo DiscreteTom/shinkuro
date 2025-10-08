@@ -118,4 +118,68 @@ Variables like `{user}` and `{project}` will be replaced with actual values when
 
 - [DiscreteTom/prompts](https://github.com/DiscreteTom/prompts).
 
+## Development
+
+### Setup
+
+Install development dependencies:
+
+```fish
+uv sync --dev
+```
+
+### Code Quality
+
+```fish
+# Format code
+uv run black .
+
+# Lint
+uv run ruff check --fix .
+
+# Type check
+uv run pyright
+```
+
+### Testing
+
+Run the test suite:
+
+```fish
+# Run all tests
+uv run pytest
+
+# Run with coverage report
+uv run pytest --cov=shinkuro --cov-report=html
+
+# Run specific test file
+uv run pytest tests/test_security.py
+```
+
+The test suite includes:
+- **Security validation tests** - Path traversal prevention, identifier validation
+- **Server tests** - SafeFormatter, dynamic prompt generation
+- **Git URL tests** - URL parsing and validation
+- **File scanning tests** - Markdown processing and error handling
+- **Integration tests** - End-to-end server functionality
+
+See [tests/README.md](./tests/README.md) for detailed testing documentation.
+
+### Pre-commit Hooks
+
+Install pre-commit hooks to run quality checks automatically:
+
+```fish
+uv run pre-commit install
+```
+
+## Security
+
+This project includes security measures to prevent:
+- **Path traversal attacks** via environment variables
+- **Code injection** through dynamic function generation
+- **Format string attacks** via template substitution
+
+See the [security module](./src/shinkuro/security.py) and [test suite](./tests/) for implementation details.
+
 ## [CHANGELOG](./CHANGELOG.md)
