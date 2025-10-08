@@ -3,7 +3,7 @@
 import os
 import sys
 from .file.load import load_file_prompts
-from .remote.git import clone_or_update_repo
+from .remote.git import get_local_cache_path, clone_or_update_repo
 from fastmcp import FastMCP
 
 
@@ -13,17 +13,15 @@ def main():
     folder = os.getenv("FOLDER")
 
     if git_url:
-        # Clone/update git repo and use as folder
-        try:
-            repo_path = clone_or_update_repo(git_url)
-            if folder:
-                # Use FOLDER as subfolder within the repo
-                folder = os.path.join(repo_path, folder)
-            else:
-                folder = repo_path
-        except RuntimeError as e:
-            print(f"Error: {e}", file=sys.stderr)
-            sys.exit(1)
+        # Get local repo path and clone/update
+        repo_path = get_local_cache_path(git_url)
+        clone_or_update_repo(git_url, repo_path)
+
+        if folder:
+            # Use FOLDER as subfolder within the repo
+            folder = str(repo_path / folder)
+        else:
+            folder = str(repo_path)
     elif not folder:
         print(
             "Error: Either FOLDER or GIT_URL environment variable is required",
