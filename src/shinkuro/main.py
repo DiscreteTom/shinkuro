@@ -2,8 +2,9 @@
 
 import os
 import sys
-from .server import create_server
+from .file.load import load_file_prompts
 from .remote.git import clone_or_update_repo
+from fastmcp import FastMCP
 
 
 def main():
@@ -30,7 +31,8 @@ def main():
         )
         sys.exit(1)
 
-    mcp = create_server(folder_path=folder)
+    mcp = FastMCP(name="shinkuro")
+    load_file_prompts(mcp, folder)
     mcp.run()
 
 

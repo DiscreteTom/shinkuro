@@ -6,7 +6,7 @@ from fastmcp.prompts.prompt import Prompt, PromptArgument
 from mcp.types import PromptMessage, TextContent
 from pydantic import Field
 
-from ..file import PromptData
+from ..model import PromptData
 
 
 class MarkdownPrompt(Prompt):
