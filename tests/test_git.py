@@ -3,20 +3,7 @@
 import pytest
 from pathlib import Path
 from shinkuro.remote.git import get_local_cache_path, clone_or_update_repo
-
-
-class MockGit:
-    """Mock git interface for testing."""
-
-    def __init__(self):
-        self.cloned = []
-        self.pulled = []
-
-    def clone(self, url: str, path: Path) -> None:
-        self.cloned.append({"url": url, "path": path})
-
-    def pull(self, path: Path) -> None:
-        self.pulled.append(path)
+from .mocks import MockGit
 
 
 def test_get_local_cache_path_github():
