@@ -47,13 +47,7 @@ class MarkdownPrompt(Prompt):
         self, arguments: dict[str, Any] | None = None
     ) -> list[PromptMessage]:
         """Render the prompt with variable substitution."""
-        # Validate required arguments
-        if self.arguments:
-            required = {arg.name for arg in self.arguments if arg.required}
-            provided = set(arguments or {})
-            missing = required - provided
-            if missing:
-                raise ValueError(f"Missing required arguments: {missing}")
+        self._validate_arguments(arguments)
 
         # Merge provided arguments with defaults
         render_args = self.arg_defaults.copy()
@@ -69,3 +63,14 @@ class MarkdownPrompt(Prompt):
                 content=TextContent(type="text", text=content),
             )
         ]
+
+    def _validate_arguments(self, arguments: dict[str, Any] | None) -> None:
+        """Validate that all required arguments are provided."""
+        if not self.arguments:
+            return
+
+        required = {arg.name for arg in self.arguments if arg.required}
+        provided = set(arguments or {})
+        missing = required - provided
+        if missing:
+            raise ValueError(f"Missing required arguments: {missing}")

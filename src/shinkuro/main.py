@@ -5,7 +5,8 @@ from pathlib import Path
 from fastmcp import FastMCP
 
 from .config import Config
-from .file.load import load_file_prompts
+from .file.scan import scan_markdown_files
+from .prompts.markdown import MarkdownPrompt
 from .remote.git import get_local_cache_path, clone_or_update_repo
 
 
@@ -32,7 +33,10 @@ def main():
             sys.exit(1)
         folder_path = Path(config.folder)
 
-    load_file_prompts(mcp, folder_path)
+    for prompt_data in scan_markdown_files(folder_path):
+        prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+        mcp.add_prompt(prompt)
+
     mcp.run()
 
 
