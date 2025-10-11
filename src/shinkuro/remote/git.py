@@ -17,10 +17,10 @@ def get_local_cache_path(git_url: str, cache_dir: Path) -> Path:
         Local path where the repository would be cached
     """
     parsed = parse(git_url)
-    if not parsed.user or not parsed.name:
+    if not parsed.owner or not parsed.name:  # type: ignore[attr-defined]
         raise ValueError(f"Cannot extract user/repo from git URL: {git_url}")
 
-    return cache_dir / "git" / str(parsed.user) / str(parsed.name)
+    return cache_dir / "git" / str(parsed.owner) / str(parsed.name)  # type: ignore[attr-defined]
 
 
 def clone_or_update_repo(

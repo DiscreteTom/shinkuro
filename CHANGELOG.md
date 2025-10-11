@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix git repository cache path generation to use repository owner instead of protocol user (was creating `/cache/git/git/repo` instead of `/cache/git/owner/repo`)
+
 ## [0.3.1] - 2025-10-08
 
 ### Added
