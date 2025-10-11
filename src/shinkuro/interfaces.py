@@ -3,6 +3,7 @@
 import sys
 from pathlib import Path
 from typing import Iterator, Protocol
+from git import Repo
 
 
 class FileSystemInterface(Protocol):
@@ -33,6 +34,18 @@ class LoggerInterface(Protocol):
         ...
 
 
+class GitInterface(Protocol):
+    """Protocol for git operations."""
+
+    def clone(self, url: str, path: Path) -> None:
+        """Clone a git repository."""
+        ...
+
+    def pull(self, path: Path) -> None:
+        """Pull latest changes from remote."""
+        ...
+
+
 class DefaultFileSystem:
     """Default file system implementation using pathlib."""
 
@@ -54,3 +67,15 @@ class DefaultLogger:
 
     def warning(self, message: str) -> None:
         print(f"Warning: {message}", file=sys.stderr)
+
+
+class DefaultGit:
+    """Default git implementation using GitPython."""
+
+    def clone(self, url: str, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        Repo.clone_from(url, path, depth=1)
+
+    def pull(self, path: Path) -> None:
+        repo = Repo(path)
+        repo.remotes.origin.pull()

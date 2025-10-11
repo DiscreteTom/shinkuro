@@ -2,9 +2,9 @@
 
 import os
 from pathlib import Path
-from git import Repo
-from .utils import get_cache_dir
 from giturlparse import parse
+from ..interfaces import GitInterface, DefaultGit
+from .utils import get_cache_dir
 
 
 def get_local_cache_path(git_url: str) -> Path:
@@ -26,19 +26,20 @@ def get_local_cache_path(git_url: str) -> Path:
     return cache_dir / "git" / str(parsed.user) / str(parsed.name)
 
 
-def clone_or_update_repo(git_url: str, local_path: Path) -> None:
+def clone_or_update_repo(
+    git_url: str, local_path: Path, *, git: GitInterface = DefaultGit()
+) -> None:
     """
     Clone or update a git repository at the specified local path.
 
     Args:
         git_url: Git repository URL
         local_path: Local path to clone/update the repository
+        git: Git interface for git operations
     """
     if local_path.exists():
         auto_pull = os.getenv("AUTO_PULL", "false").lower() == "true"
         if auto_pull:
-            repo = Repo(local_path)
-            repo.remotes.origin.pull()
+            git.pull(local_path)
     else:
-        local_path.parent.mkdir(parents=True, exist_ok=True)
-        Repo.clone_from(git_url, local_path, depth=1)
+        git.clone(git_url, local_path)
