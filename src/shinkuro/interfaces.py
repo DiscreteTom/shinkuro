@@ -1,5 +1,6 @@
 """Interfaces for dependency injection and testing."""
 
+import sys
 from pathlib import Path
 from typing import Iterator, Protocol
 
@@ -24,6 +25,14 @@ class FileSystemInterface(Protocol):
         ...
 
 
+class LoggerInterface(Protocol):
+    """Protocol for logging operations."""
+
+    def warning(self, message: str) -> None:
+        """Log a warning message."""
+        ...
+
+
 class DefaultFileSystem:
     """Default file system implementation using pathlib."""
 
@@ -38,3 +47,10 @@ class DefaultFileSystem:
 
     def is_dir(self, path: Path) -> bool:
         return path.is_dir()
+
+
+class DefaultLogger:
+    """Default logger implementation using stderr."""
+
+    def warning(self, message: str) -> None:
+        print(f"Warning: {message}", file=sys.stderr)
