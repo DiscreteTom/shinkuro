@@ -1,37 +1,36 @@
 """Main entry point for shinkuro MCP server."""
 
-import os
 import sys
+from pathlib import Path
+from fastmcp import FastMCP
+
+from .config import Config
 from .file.load import load_file_prompts
 from .remote.git import get_local_cache_path, clone_or_update_repo
-from fastmcp import FastMCP
-from pathlib import Path
 
 
 def main():
     """Start the shinkuro MCP server."""
-    git_url = os.getenv("GIT_URL")
-    folder = os.getenv("FOLDER")
-
+    config = Config.from_env()
     mcp = FastMCP(name="shinkuro")
 
-    if git_url:
-        repo_path = get_local_cache_path(git_url)
-        clone_or_update_repo(git_url, repo_path)
+    if config.git_url:
+        repo_path = get_local_cache_path(config.git_url, config.cache_dir)
+        clone_or_update_repo(config.git_url, repo_path, config.auto_pull)
 
-        if folder:
+        if config.folder:
             # Use FOLDER as subfolder within the repo
-            folder_path = repo_path / folder
+            folder_path = repo_path / config.folder
         else:
             folder_path = repo_path
     else:
-        if not folder:
+        if not config.folder:
             print(
                 "Error: Either FOLDER or GIT_URL environment variable is required",
                 file=sys.stderr,
             )
             sys.exit(1)
-        folder_path = Path(folder)
+        folder_path = Path(config.folder)
 
     load_file_prompts(mcp, folder_path)
     mcp.run()
