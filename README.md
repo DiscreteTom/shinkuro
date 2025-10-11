@@ -1,6 +1,7 @@
 # Shinkuro - Prompt synchronization MCP server
 
-![PyPI - Version](https://img.shields.io/pypi/v/shinkuro)
+[![PyPI - Version](https://img.shields.io/pypi/v/shinkuro)](https://pypi.org/project/shinkuro/)
+![Codecov](https://img.shields.io/codecov/c/github/DiscreteTom/shinkuro)
 
 Loads markdown files from a local folder or git repository and serves them as [MCP Prompts](https://modelcontextprotocol.io/specification/2025-06-18/server/prompts).
 
