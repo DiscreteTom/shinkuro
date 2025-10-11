@@ -24,6 +24,51 @@ def test_get_local_cache_path_ssh():
     assert result == Path("/cache/git/user/repo")
 
 
+def test_get_local_cache_path_gitlab():
+    cache_dir = Path("/cache")
+    git_url = "https://gitlab.com/user/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/user/repo")
+
+
+def test_get_local_cache_path_gitlab_ssh():
+    cache_dir = Path("/cache")
+    git_url = "git@gitlab.com:user/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/user/repo")
+
+
+def test_get_local_cache_path_with_username():
+    cache_dir = Path("/cache")
+    git_url = "https://username@github.com/owner/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/owner/repo")
+
+
+def test_get_local_cache_path_with_credentials():
+    cache_dir = Path("/cache")
+    git_url = "https://username:token@github.com/owner/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/owner/repo")
+
+
+def test_get_local_cache_path_gitlab_with_credentials():
+    cache_dir = Path("/cache")
+    git_url = "https://oauth2:token@gitlab.com/owner/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/owner/repo")
+
+
 def test_get_local_cache_path_invalid_url():
     cache_dir = Path("/cache")
     git_url = "invalid-url"
