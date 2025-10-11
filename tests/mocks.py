@@ -31,3 +31,17 @@ class MockLogger:
 
     def warning(self, message: str) -> None:
         self.warnings.append(message)
+
+
+class MockGit:
+    """Mock git interface for testing."""
+
+    def __init__(self):
+        self.cloned = []
+        self.pulled = []
+
+    def clone(self, url: str, path: Path) -> None:
+        self.cloned.append({"url": url, "path": path})
+
+    def pull(self, path: Path) -> None:
+        self.pulled.append(path)
