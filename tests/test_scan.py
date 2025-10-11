@@ -11,6 +11,7 @@ from shinkuro.file.scan import (
 )
 from shinkuro.model import Argument
 from .mocks import MockFileSystem, MockLogger
+from .fixtures import create_markdown_file_content, create_test_files
 
 
 def test_extract_string_field_with_string():
@@ -125,15 +126,13 @@ def test_parse_markdown_file_simple():
 
 def test_parse_markdown_file_with_frontmatter():
     logger = MockLogger()
-    content = """---
-name: greeting
-title: Greeting Prompt
-description: A greeting
-arguments:
-  - name: user
-    description: User name
----
-Hello {user}"""
+    content = create_markdown_file_content(
+        content="Hello {user}",
+        name="greeting",
+        title="Greeting Prompt",
+        description="A greeting",
+        arguments=[{"name": "user", "description": "User name"}],
+    )
     result = _parse_markdown_file(
         Path("/test/file.md"), Path("/test"), content, logger=logger
     )
@@ -158,10 +157,12 @@ def test_parse_markdown_file_unsafe_template():
 
 def test_scan_markdown_files_basic():
     fs = MockFileSystem(
-        {
-            Path("/test/file1.md"): "Content 1",
-            Path("/test/file2.md"): "Content 2",
-        }
+        create_test_files(
+            {
+                "/test/file1.md": "Content 1",
+                "/test/file2.md": "Content 2",
+            }
+        )
     )
     logger = MockLogger()
     results = list(scan_markdown_files(Path("/test"), fs=fs, logger=logger))
@@ -178,7 +179,9 @@ def test_scan_markdown_files_folder_not_exists():
 
 
 def test_scan_markdown_files_with_error():
-    fs = MockFileSystem({Path("/test/bad.md"): "---\ninvalid yaml: [\n---\nContent"})
+    fs = MockFileSystem(
+        create_test_files({"/test/bad.md": "---\ninvalid yaml: [\n---\nContent"})
+    )
     logger = MockLogger()
     results = list(scan_markdown_files(Path("/test"), fs=fs, logger=logger))
     assert len(results) == 0
@@ -188,10 +191,12 @@ def test_scan_markdown_files_with_error():
 
 def test_scan_markdown_files_skips_invalid():
     fs = MockFileSystem(
-        {
-            Path("/test/good.md"): "Good content",
-            Path("/test/bad.md"): "Bad {123}",
-        }
+        create_test_files(
+            {
+                "/test/good.md": "Good content",
+                "/test/bad.md": "Bad {123}",
+            }
+        )
     )
     logger = MockLogger()
     results = list(scan_markdown_files(Path("/test"), fs=fs, logger=logger))
