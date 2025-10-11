@@ -13,6 +13,9 @@ from ..interfaces import (
     DefaultLogger,
 )
 
+# Python identifier pattern for argument names and template variables
+_IDENTIFIER_PATTERN = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
+
 
 def _extract_string_field(
     metadata: dict,
@@ -56,8 +59,8 @@ def _parse_argument(
         )
         arg_name = str(arg_name)
 
-    # Validate arg name format
-    if not re.match(r"^[a-zA-Z0-9_]+$", arg_name):
+    # Validate arg name format (must be valid Python identifier)
+    if not re.match(_IDENTIFIER_PATTERN, arg_name):
         logger.warning(
             f"argument name '{arg_name}' in {file_path} contains invalid characters, skipping argument"
         )
@@ -104,7 +107,7 @@ def _validate_template_variables(content: str) -> bool:
     """Validate that template variables are safe (alphanumeric and underscore only)."""
     formatter = string.Formatter()
     for literal_text, field_name, format_spec, conversion in formatter.parse(content):
-        if field_name and not re.match(r"^[a-zA-Z_][a-zA-Z0-9_]*$", field_name):
+        if field_name and not re.match(_IDENTIFIER_PATTERN, field_name):
             return False
     return True
 
