@@ -7,29 +7,33 @@ import sys
 from pathlib import Path
 from typing import Iterator
 from ..model import Argument, PromptData
+from ..interfaces import FileSystemInterface, DefaultFileSystem
 
 
-def scan_markdown_files(folder: Path) -> Iterator[PromptData]:
+def scan_markdown_files(
+    folder: Path, *, fs: FileSystemInterface = DefaultFileSystem()
+) -> Iterator[PromptData]:
     """
     Scan folder recursively for markdown files.
 
     Args:
         folder_path: Path to folder to scan
+        fs: File system interface for file operations
 
     Yields:
         PromptData for each markdown file
     """
-    if not folder.exists() or not folder.is_dir():
+    if not fs.exists(folder) or not fs.is_dir(folder):
         print(
             f"Warning: folder path '{str(folder)}' does not exist or is not a directory",
             file=sys.stderr,
         )
         return
 
-    for md_file in folder.rglob("*.md"):
+    for md_file in fs.glob_markdown(folder):
         try:
-            with open(md_file, "r", encoding="utf-8") as f:
-                post = frontmatter.load(f)
+            content = fs.read_text(md_file)
+            post = frontmatter.loads(content)
 
             # Use frontmatter name if available, convert to string if needed, otherwise use filename
             frontmatter_name = post.metadata.get("name")
