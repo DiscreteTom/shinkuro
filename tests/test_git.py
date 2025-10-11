@@ -1,0 +1,83 @@
+"""Tests for remote/git.py module."""
+
+import pytest
+from pathlib import Path
+from shinkuro.remote.git import get_local_cache_path, clone_or_update_repo
+
+
+class MockGit:
+    """Mock git interface for testing."""
+
+    def __init__(self):
+        self.cloned = []
+        self.pulled = []
+
+    def clone(self, url: str, path: Path) -> None:
+        self.cloned.append({"url": url, "path": path})
+
+    def pull(self, path: Path) -> None:
+        self.pulled.append(path)
+
+
+def test_get_local_cache_path_github():
+    cache_dir = Path("/cache")
+    git_url = "https://github.com/user/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/user/repo")
+
+
+def test_get_local_cache_path_ssh():
+    cache_dir = Path("/cache")
+    git_url = "git@github.com:user/repo.git"
+
+    result = get_local_cache_path(git_url, cache_dir)
+
+    assert result == Path("/cache/git/user/repo")
+
+
+def test_get_local_cache_path_invalid_url():
+    cache_dir = Path("/cache")
+    git_url = "invalid-url"
+
+    with pytest.raises(ValueError, match="Cannot extract user/repo"):
+        get_local_cache_path(git_url, cache_dir)
+
+
+def test_clone_or_update_repo_clone_new(tmp_path):
+    git = MockGit()
+    git_url = "https://github.com/user/repo.git"
+    local_path = tmp_path / "repo"
+
+    clone_or_update_repo(git_url, local_path, False, git=git)
+
+    assert len(git.cloned) == 1
+    assert git.cloned[0]["url"] == git_url
+    assert git.cloned[0]["path"] == local_path
+    assert len(git.pulled) == 0
+
+
+def test_clone_or_update_repo_exists_no_pull(tmp_path):
+    git = MockGit()
+    git_url = "https://github.com/user/repo.git"
+    local_path = tmp_path / "repo"
+    local_path.mkdir()
+
+    clone_or_update_repo(git_url, local_path, False, git=git)
+
+    assert len(git.cloned) == 0
+    assert len(git.pulled) == 0
+
+
+def test_clone_or_update_repo_exists_with_pull(tmp_path):
+    git = MockGit()
+    git_url = "https://github.com/user/repo.git"
+    local_path = tmp_path / "repo"
+    local_path.mkdir()
+
+    clone_or_update_repo(git_url, local_path, True, git=git)
+
+    assert len(git.cloned) == 0
+    assert len(git.pulled) == 1
+    assert git.pulled[0] == local_path
