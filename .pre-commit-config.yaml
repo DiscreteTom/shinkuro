@@ -14,3 +14,12 @@ repos:
     rev: v1.1.405
     hooks:
       - id: pyright
+
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
