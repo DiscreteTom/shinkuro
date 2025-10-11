@@ -1,8 +1,8 @@
-"""Tests for main.py module."""
+"""Tests for loader.py module."""
 
 import pytest
 from pathlib import Path
-from shinkuro.main import get_folder_path
+from shinkuro.loader import get_folder_path
 from shinkuro.config import Config
 
 
@@ -39,7 +39,7 @@ def test_get_folder_path_git_only(tmp_path, monkeypatch):
         cloned.append(path)
         path.mkdir(parents=True, exist_ok=True)
 
-    monkeypatch.setattr("shinkuro.main.clone_or_update_repo", mock_clone)
+    monkeypatch.setattr("shinkuro.loader.clone_or_update_repo", mock_clone)
 
     config = Config(
         folder=None,
@@ -59,7 +59,7 @@ def test_get_folder_path_git_with_subfolder(tmp_path, monkeypatch):
     def mock_clone(url, path, auto_pull, git=None):
         path.mkdir(parents=True, exist_ok=True)
 
-    monkeypatch.setattr("shinkuro.main.clone_or_update_repo", mock_clone)
+    monkeypatch.setattr("shinkuro.loader.clone_or_update_repo", mock_clone)
 
     config = Config(
         folder="prompts",
@@ -82,7 +82,7 @@ def test_get_folder_path_git_with_auto_pull(tmp_path, monkeypatch):
         if auto_pull:
             pulled.append(path)
 
-    monkeypatch.setattr("shinkuro.main.clone_or_update_repo", mock_clone)
+    monkeypatch.setattr("shinkuro.loader.clone_or_update_repo", mock_clone)
 
     config = Config(
         folder=None,
