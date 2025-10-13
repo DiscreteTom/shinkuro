@@ -62,6 +62,7 @@ Add to your MCP client configuration:
   - `brace`: Use `{var}` syntax (default)
   - `dollar`: Use `$var` syntax
 - `AUTO_DISCOVER_ARGS`: Auto-discover template variables as required arguments (optional, defaults to `false`)
+- `SKIP_FRONTMATTER`: Skip frontmatter processing and use raw markdown content (optional, defaults to `false`)
 
 ## Prompt Loading
 

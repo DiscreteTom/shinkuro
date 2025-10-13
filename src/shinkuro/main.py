@@ -22,7 +22,7 @@ def main():
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
-    for prompt_data in scan_markdown_files(folder_path):
+    for prompt_data in scan_markdown_files(folder_path, config.skip_frontmatter):
         prompt = MarkdownPrompt.from_prompt_data(
             prompt_data, formatter, config.auto_discover_args
         )

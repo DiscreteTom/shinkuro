@@ -66,6 +66,7 @@ def test_config_dataclass_creation():
         auto_pull=True,
         formatter=FormatterType.DOLLAR,
         auto_discover_args=True,
+        skip_frontmatter=False,
     )
 
     assert config.folder == "/test"
@@ -119,3 +120,15 @@ def test_config_auto_discover_args_true(monkeypatch):
 
     config = Config.from_env()
     assert config.auto_discover_args is True
+
+
+def test_config_skip_frontmatter_default(monkeypatch):
+    monkeypatch.delenv("SKIP_FRONTMATTER", raising=False)
+    config = Config.from_env()
+    assert config.skip_frontmatter is False
+
+
+def test_config_skip_frontmatter_true(monkeypatch):
+    monkeypatch.setenv("SKIP_FRONTMATTER", "true")
+    config = Config.from_env()
+    assert config.skip_frontmatter is True

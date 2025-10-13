@@ -15,6 +15,7 @@ def test_get_folder_path_local_folder():
         auto_pull=False,
         formatter=FormatterType.BRACE,
         auto_discover_args=False,
+        skip_frontmatter=False,
     )
 
     result = get_folder_path(config)
@@ -30,6 +31,7 @@ def test_get_folder_path_no_config():
         auto_pull=False,
         formatter=FormatterType.BRACE,
         auto_discover_args=False,
+        skip_frontmatter=False,
     )
 
     with pytest.raises(ValueError, match="Either FOLDER or GIT_URL"):
@@ -53,6 +55,7 @@ def test_get_folder_path_git_only(tmp_path, monkeypatch):
         auto_pull=False,
         formatter=FormatterType.BRACE,
         auto_discover_args=False,
+        skip_frontmatter=False,
     )
 
     result = get_folder_path(config)
@@ -75,6 +78,7 @@ def test_get_folder_path_git_with_subfolder(tmp_path, monkeypatch):
         auto_pull=False,
         formatter=FormatterType.BRACE,
         auto_discover_args=False,
+        skip_frontmatter=False,
     )
 
     result = get_folder_path(config)
@@ -100,6 +104,7 @@ def test_get_folder_path_git_with_auto_pull(tmp_path, monkeypatch):
         auto_pull=True,
         formatter=FormatterType.BRACE,
         auto_discover_args=False,
+        skip_frontmatter=False,
     )
 
     result = get_folder_path(config)

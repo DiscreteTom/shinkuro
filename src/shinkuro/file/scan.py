@@ -92,9 +92,26 @@ def _parse_arguments(
 
 
 def _parse_markdown_file(
-    md_file: Path, folder: Path, content: str, *, logger: LoggerInterface
+    md_file: Path,
+    folder: Path,
+    content: str,
+    skip_frontmatter: bool,
+    *,
+    logger: LoggerInterface,
 ) -> PromptData:
     """Parse a single markdown file into PromptData."""
+    default_description = f"Prompt from {md_file.relative_to(folder)}"
+
+    if skip_frontmatter:
+        # Skip frontmatter processing, use file content as-is
+        return PromptData(
+            name=md_file.stem,
+            title=md_file.stem,
+            description=default_description,
+            arguments=[],
+            content=content,
+        )
+
     post = frontmatter.loads(content)
 
     name = _extract_string_field(
@@ -106,7 +123,7 @@ def _parse_markdown_file(
     description = _extract_string_field(
         post.metadata,
         "description",
-        f"Prompt from {md_file.relative_to(folder)}",
+        default_description,
         md_file,
         logger=logger,
     )
@@ -117,6 +134,7 @@ def _parse_markdown_file(
 
 def scan_markdown_files(
     folder: Path,
+    skip_frontmatter: bool,
     *,
     fs: FileSystemInterface = DefaultFileSystem(),
     logger: LoggerInterface = DefaultLogger(),
@@ -141,7 +159,9 @@ def scan_markdown_files(
     for md_file in fs.glob_markdown(folder):
         try:
             content = fs.read_text(md_file)
-            prompt_data = _parse_markdown_file(md_file, folder, content, logger=logger)
+            prompt_data = _parse_markdown_file(
+                md_file, folder, content, skip_frontmatter, logger=logger
+            )
             yield prompt_data
         except Exception as e:
             logger.warning(f"failed to process {md_file}: {e}")

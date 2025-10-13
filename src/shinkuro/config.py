@@ -17,6 +17,7 @@ class Config:
     auto_pull: bool
     formatter: FormatterType
     auto_discover_args: bool
+    skip_frontmatter: bool
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -43,4 +44,5 @@ class Config:
             formatter=formatter,
             auto_discover_args=os.getenv("AUTO_DISCOVER_ARGS", "false").lower()
             == "true",
+            skip_frontmatter=os.getenv("SKIP_FRONTMATTER", "false").lower() == "true",
         )
