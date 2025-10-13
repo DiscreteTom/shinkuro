@@ -17,8 +17,8 @@ def validate_variable_name(name: str) -> bool:
 class FormatterInterface(Protocol):
     """Protocol for template formatters."""
 
-    def extract_parameters(self, content: str) -> set[str]:
-        """Extract and validate parameter names from content."""
+    def extract_arguments(self, content: str) -> set[str]:
+        """Extract and validate argument names from content."""
         ...
 
     def format(self, content: str, variables: Dict[str, Any]) -> str:
@@ -29,15 +29,15 @@ class FormatterInterface(Protocol):
 class BraceFormatter:
     """Formatter for {var} syntax."""
 
-    def extract_parameters(self, content: str) -> set[str]:
+    def extract_arguments(self, content: str) -> set[str]:
         formatter = string.Formatter()
-        params = set()
+        arguments = set()
         for _, field_name, _, _ in formatter.parse(content):
             if field_name:
                 if not validate_variable_name(field_name):
                     raise ValueError(f"Invalid variable name: {field_name}")
-                params.add(field_name)
-        return params
+                arguments.add(field_name)
+        return arguments
 
     def format(self, content: str, variables: Dict[str, Any]) -> str:
         return content.format(**variables)
@@ -46,17 +46,17 @@ class BraceFormatter:
 class DollarFormatter:
     """Formatter for $var syntax."""
 
-    def extract_parameters(self, content: str) -> set[str]:
+    def extract_arguments(self, content: str) -> set[str]:
         try:
             template = string.Template(content)
-            params = set()
+            arguments = set()
             for match in template.pattern.finditer(content):
                 if match.group("named"):
                     param = match.group("named")
                     if not validate_variable_name(param):
                         raise ValueError(f"Invalid variable name: {param}")
-                    params.add(param)
-            return params
+                    arguments.add(param)
+            return arguments
         except ValueError as e:
             raise ValueError(f"Invalid template syntax: {e}")
 

@@ -38,14 +38,14 @@ class MarkdownPrompt(Prompt):
                 raise ValueError(
                     "prompt_data.arguments must be empty when auto_discover_args is enabled"
                 )
-            discovered_params = formatter.extract_parameters(prompt_data.content)
+            discovered_args = formatter.extract_arguments(prompt_data.content)
             arguments = [
                 PromptArgument(
-                    name=param,
+                    name=arg,
                     description="",
                     required=True,
                 )
-                for param in sorted(discovered_params)
+                for arg in sorted(discovered_args)
             ]
             arg_defaults = {}
         else:
@@ -56,13 +56,13 @@ class MarkdownPrompt(Prompt):
                         f"Argument name '{arg.name}' contains invalid characters"
                     )
 
-            # Validate content and get discovered parameters
-            discovered_params = formatter.extract_parameters(prompt_data.content)
-            provided_params = {arg.name for arg in prompt_data.arguments}
+            # Validate content and get discovered arguments
+            discovered_args = formatter.extract_arguments(prompt_data.content)
+            provided_args = {arg.name for arg in prompt_data.arguments}
 
-            if discovered_params != provided_params:
+            if discovered_args != provided_args:
                 raise ValueError(
-                    f"Content parameters {discovered_params} don't match provided arguments {provided_params}"
+                    f"Content arguments {discovered_args} don't match provided arguments {provided_args}"
                 )
 
             arguments = [

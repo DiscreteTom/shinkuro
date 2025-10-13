@@ -24,16 +24,16 @@ def test_validate_variable_name_invalid():
     assert validate_variable_name("") is False
 
 
-def test_brace_formatter_extract_parameters():
+def test_brace_formatter_extract_arguments():
     formatter = BraceFormatter()
-    params = formatter.extract_parameters("Hello {user} from {project}")
-    assert params == {"user", "project"}
+    arguments = formatter.extract_arguments("Hello {user} from {project}")
+    assert arguments == {"user", "project"}
 
 
-def test_brace_formatter_extract_parameters_invalid():
+def test_brace_formatter_extract_arguments_invalid():
     formatter = BraceFormatter()
     with pytest.raises(ValueError, match="Invalid variable name"):
-        formatter.extract_parameters("Hello {123}")
+        formatter.extract_arguments("Hello {123}")
 
 
 def test_brace_formatter_format():
@@ -42,10 +42,10 @@ def test_brace_formatter_format():
     assert result == "Hello Alice!"
 
 
-def test_dollar_formatter_extract_parameters():
+def test_dollar_formatter_extract_arguments():
     formatter = DollarFormatter()
-    params = formatter.extract_parameters("Hello $user from $project")
-    assert params == {"user", "project"}
+    arguments = formatter.extract_arguments("Hello $user from $project")
+    assert arguments == {"user", "project"}
 
 
 def test_dollar_formatter_format():

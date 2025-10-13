@@ -33,7 +33,7 @@ class PromptData:
         name: Unique identifier for the prompt
         title: Display title for the prompt
         description: Brief description of prompt purpose
-        arguments: Template parameters this prompt accepts
+        arguments: Template arguments this prompt accepts
         content: Template content for variable substitution
     """
 

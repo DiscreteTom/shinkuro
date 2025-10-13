@@ -165,14 +165,14 @@ async def test_markdown_prompt_validation_invalid_argument_name():
 
 
 @pytest.mark.asyncio
-async def test_markdown_prompt_validation_mismatched_parameters():
+async def test_markdown_prompt_validation_mismatched_arguments():
     prompt_data = create_prompt_data(
         arguments=[create_argument("user", "User name", None)],
         content="Hello {name}!",  # Different parameter name
     )
 
     with pytest.raises(
-        ValueError, match="Content parameters .* don't match provided arguments"
+        ValueError, match="Content arguments .* don't match provided arguments"
     ):
         MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
