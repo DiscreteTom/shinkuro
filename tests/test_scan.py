@@ -6,7 +6,6 @@ from shinkuro.file.scan import (
     _extract_string_field,
     _parse_argument,
     _parse_arguments,
-    _validate_template_variables,
     _parse_markdown_file,
 )
 from shinkuro.model import Argument
@@ -67,13 +66,6 @@ def test_parse_argument_missing_name():
     assert len(logger.warnings) == 1
 
 
-def test_parse_argument_invalid_name():
-    logger = MockLogger()
-    arg = _parse_argument({"name": "123invalid"}, Path("/test.md"), logger=logger)
-    assert arg is None
-    assert "invalid characters" in logger.warnings[0]
-
-
 def test_parse_argument_name_with_underscore():
     logger = MockLogger()
     arg = _parse_argument({"name": "_valid"}, Path("/test.md"), logger=logger)
@@ -98,18 +90,6 @@ def test_parse_arguments_not_list():
     args = _parse_arguments({"arguments": "invalid"}, Path("/test.md"), logger=logger)
     assert len(args) == 0
     assert len(logger.warnings) == 1
-
-
-def test_validate_template_variables_valid():
-    assert _validate_template_variables("Hello {name}") is True
-    assert _validate_template_variables("Hello {_name}") is True
-    assert _validate_template_variables("Hello {name123}") is True
-
-
-def test_validate_template_variables_invalid():
-    assert _validate_template_variables("Hello {123}") is False
-    assert _validate_template_variables("Hello {name-invalid}") is False
-    assert _validate_template_variables("Hello {9var}") is False
 
 
 def test_parse_markdown_file_simple():
@@ -144,17 +124,6 @@ def test_parse_markdown_file_with_frontmatter():
     assert result.arguments[0].name == "user"
 
 
-def test_parse_markdown_file_unsafe_template():
-    logger = MockLogger()
-    content = "Hello {123}"
-    result = _parse_markdown_file(
-        Path("/test/file.md"), Path("/test"), content, logger=logger
-    )
-    assert result is None
-    assert len(logger.warnings) == 1
-    assert "unsafe template variables" in logger.warnings[0]
-
-
 def test_scan_markdown_files_basic():
     fs = MockFileSystem(
         create_test_files(
@@ -187,21 +156,6 @@ def test_scan_markdown_files_with_error():
     assert len(results) == 0
     assert len(logger.warnings) == 1
     assert "failed to process" in logger.warnings[0]
-
-
-def test_scan_markdown_files_skips_invalid():
-    fs = MockFileSystem(
-        create_test_files(
-            {
-                "/test/good.md": "Good content",
-                "/test/bad.md": "Bad {123}",
-            }
-        )
-    )
-    logger = MockLogger()
-    results = list(scan_markdown_files(Path("/test"), fs=fs, logger=logger))
-    assert len(results) == 1
-    assert results[0].name == "good"
 
 
 def test_parse_argument_non_string_name():

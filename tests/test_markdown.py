@@ -3,6 +3,7 @@
 import pytest
 from mcp.types import TextContent
 from shinkuro.prompts.markdown import MarkdownPrompt
+from shinkuro.formatters import BraceFormatter, DollarFormatter
 from .fixtures import create_prompt_data, create_argument
 
 
@@ -16,7 +17,7 @@ async def test_markdown_prompt_from_prompt_data():
         content="Hello {user}",
     )
 
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     assert prompt.name == "test"
     assert prompt.title == "Test Prompt"
@@ -35,7 +36,7 @@ async def test_markdown_prompt_with_defaults():
         content="Hello {user}",
     )
 
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     assert prompt.arguments is not None
     assert prompt.arguments[0].required is False
@@ -45,7 +46,7 @@ async def test_markdown_prompt_with_defaults():
 @pytest.mark.asyncio
 async def test_markdown_prompt_render_simple():
     prompt_data = create_prompt_data(content="Hello world")
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     messages = await prompt.render()
 
@@ -61,7 +62,7 @@ async def test_markdown_prompt_render_with_arguments():
         arguments=[create_argument("name", "Name", None)],
         content="Hello {name}!",
     )
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     messages = await prompt.render({"name": "Alice"})
 
@@ -75,7 +76,7 @@ async def test_markdown_prompt_render_with_defaults():
         arguments=[create_argument("name", "Name", "World")],
         content="Hello {name}!",
     )
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     messages = await prompt.render()
 
@@ -89,7 +90,7 @@ async def test_markdown_prompt_render_override_default():
         arguments=[create_argument("name", "Name", "World")],
         content="Hello {name}!",
     )
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     messages = await prompt.render({"name": "Alice"})
 
@@ -103,7 +104,7 @@ async def test_markdown_prompt_missing_required_argument():
         arguments=[create_argument("name", "Name", None)],
         content="Hello {name}!",
     )
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     with pytest.raises(ValueError, match="Missing required arguments"):
         await prompt.render()
@@ -112,7 +113,7 @@ async def test_markdown_prompt_missing_required_argument():
 @pytest.mark.asyncio
 async def test_markdown_prompt_validate_arguments_no_args():
     prompt_data = create_prompt_data(content="Hello")
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     # Should not raise
     prompt._validate_arguments(None)
@@ -128,9 +129,49 @@ async def test_markdown_prompt_multiple_arguments():
         ],
         content="Hello {first} {last}!",
     )
-    prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
 
     messages = await prompt.render({"first": "John"})
 
     assert isinstance(messages[0].content, TextContent)
     assert messages[0].content.text == "Hello John Doe!"
+
+
+@pytest.mark.asyncio
+async def test_markdown_prompt_dollar_formatter():
+    prompt_data = create_prompt_data(
+        arguments=[create_argument("name", "Name", None)],
+        content="Hello $name!",
+    )
+    prompt = MarkdownPrompt.from_prompt_data(prompt_data, DollarFormatter())
+
+    messages = await prompt.render({"name": "Alice"})
+
+    assert isinstance(messages[0].content, TextContent)
+    assert messages[0].content.text == "Hello Alice!"
+
+
+@pytest.mark.asyncio
+async def test_markdown_prompt_validation_invalid_argument_name():
+    prompt_data = create_prompt_data(
+        arguments=[create_argument("123invalid", "Invalid name", None)],
+        content="Hello {user}!",
+    )
+
+    with pytest.raises(
+        ValueError, match="Argument name '123invalid' contains invalid characters"
+    ):
+        MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
+
+
+@pytest.mark.asyncio
+async def test_markdown_prompt_validation_mismatched_parameters():
+    prompt_data = create_prompt_data(
+        arguments=[create_argument("user", "User name", None)],
+        content="Hello {name}!",  # Different parameter name
+    )
+
+    with pytest.raises(
+        ValueError, match="Content parameters .* don't match provided arguments"
+    ):
+        MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())

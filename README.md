@@ -58,6 +58,9 @@ Add to your MCP client configuration:
 - `GIT_URL`: Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials)
 - `CACHE_DIR`: Directory to cache remote repositories (optional, defaults to `~/.shinkuro/remote`)
 - `AUTO_PULL`: Whether to refresh local cache on startup (optional, defaults to `false`)
+- `VARIABLE_FORMAT`: Template variable format (optional, defaults to `brace`)
+  - `brace`: Use `{var}` syntax (default)
+  - `dollar`: Use `$var` syntax
 
 ## Prompt Loading
 
@@ -115,7 +118,13 @@ arguments:
 Say: Hello {user}! Welcome to {project}. Hope you enjoy your stay!
 ```
 
-Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved. Use `{{var}}` (double brackets) to escape and display literal brackets.
+Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved. 
+
+**Different Variable Formats:**
+- `VARIABLE_FORMAT=brace` (default): `{user}`, `{project}`
+- `VARIABLE_FORMAT=dollar`: `$user`, `$project`
+
+Use `{{var}}` (double brackets) to escape and display literal brackets when using brace formatter.
 
 ## Example Prompt Repositories
 

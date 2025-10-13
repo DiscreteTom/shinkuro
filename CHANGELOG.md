@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for `VARIABLE_FORMAT` environment variable to choose between `{var}` (brace) and `$var` (dollar) syntax
+
 ## [0.3.2] - 2025-10-11
 
 ### Fixed

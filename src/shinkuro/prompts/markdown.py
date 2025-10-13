@@ -7,6 +7,7 @@ from mcp.types import PromptMessage, TextContent
 from pydantic import Field
 
 from ..model import PromptData
+from ..formatters import FormatterInterface, validate_variable_name
 
 
 class MarkdownPrompt(Prompt):
@@ -17,9 +18,33 @@ class MarkdownPrompt(Prompt):
         default_factory=dict, description="Default values for arguments"
     )
 
+    def __init__(self, formatter: FormatterInterface, **data):
+        # Use custom __init__ and private _formatter because Pydantic cannot
+        # serialize Protocol types as regular fields
+        super().__init__(**data)
+        self._formatter = formatter
+
     @classmethod
-    def from_prompt_data(cls, prompt_data: PromptData) -> "MarkdownPrompt":
-        """Create MarkdownPrompt from PromptData."""
+    def from_prompt_data(
+        cls, prompt_data: PromptData, formatter: FormatterInterface
+    ) -> "MarkdownPrompt":
+        """Create MarkdownPrompt from PromptData with validation."""
+        # Validate arguments
+        for arg in prompt_data.arguments:
+            if not validate_variable_name(arg.name):
+                raise ValueError(
+                    f"Argument name '{arg.name}' contains invalid characters"
+                )
+
+        # Validate content and get discovered parameters
+        discovered_params = formatter.extract_parameters(prompt_data.content)
+        provided_params = {arg.name for arg in prompt_data.arguments}
+
+        if discovered_params != provided_params:
+            raise ValueError(
+                f"Content parameters {discovered_params} don't match provided arguments {provided_params}"
+            )
+
         arguments = [
             PromptArgument(
                 name=arg.name,
@@ -30,6 +55,7 @@ class MarkdownPrompt(Prompt):
         ]
 
         return cls(
+            formatter=formatter,
             name=prompt_data.name,
             title=prompt_data.title,
             description=prompt_data.description,
@@ -54,8 +80,8 @@ class MarkdownPrompt(Prompt):
         if arguments:
             render_args.update(arguments)
 
-        # Perform variable substitution
-        content = self.content.format(**render_args)
+        # Perform variable substitution using formatter
+        content = self._formatter.format(self.content, render_args)
 
         return [
             PromptMessage(

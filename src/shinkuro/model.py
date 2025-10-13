@@ -1,5 +1,13 @@
 from typing import List, Optional
 from dataclasses import dataclass
+from enum import Enum
+
+
+class FormatterType(Enum):
+    """Available template formatter types."""
+
+    BRACE = "brace"
+    DOLLAR = "dollar"
 
 
 @dataclass
@@ -26,7 +34,7 @@ class PromptData:
         title: Display title for the prompt
         description: Brief description of prompt purpose
         arguments: Template parameters this prompt accepts
-        content: Template content with validated variable substitution
+        content: Template content for variable substitution
     """
 
     name: str

@@ -1,8 +1,6 @@
 """Local file-based prompt loader."""
 
 import frontmatter
-import re
-import string
 from pathlib import Path
 from typing import Iterator, Optional, Any
 from ..model import Argument, PromptData
@@ -12,9 +10,6 @@ from ..interfaces import (
     LoggerInterface,
     DefaultLogger,
 )
-
-# Python identifier pattern for argument names and template variables
-_IDENTIFIER_PATTERN = r"^[a-zA-Z_][a-zA-Z0-9_]*$"
 
 
 def _extract_string_field(
@@ -59,13 +54,6 @@ def _parse_argument(
         )
         arg_name = str(arg_name)
 
-    # Validate arg name format (must be valid Python identifier)
-    if not re.match(_IDENTIFIER_PATTERN, arg_name):
-        logger.warning(
-            f"argument name '{arg_name}' in {file_path} contains invalid characters, skipping argument"
-        )
-        return None
-
     # Handle description field
     arg_description = arg_data.get("description", "")
     if arg_description != "" and not isinstance(arg_description, str):
@@ -103,18 +91,9 @@ def _parse_arguments(
     return arguments
 
 
-def _validate_template_variables(content: str) -> bool:
-    """Validate that template variables are safe (alphanumeric and underscore only)."""
-    formatter = string.Formatter()
-    for literal_text, field_name, format_spec, conversion in formatter.parse(content):
-        if field_name and not re.match(_IDENTIFIER_PATTERN, field_name):
-            return False
-    return True
-
-
 def _parse_markdown_file(
     md_file: Path, folder: Path, content: str, *, logger: LoggerInterface
-) -> Optional[PromptData]:
+) -> PromptData:
     """Parse a single markdown file into PromptData."""
     post = frontmatter.loads(content)
 
@@ -132,12 +111,6 @@ def _parse_markdown_file(
         logger=logger,
     )
     arguments = _parse_arguments(post.metadata, md_file, logger=logger)
-
-    if not _validate_template_variables(post.content):
-        logger.warning(
-            f"content in {md_file} contains unsafe template variables, skipping file"
-        )
-        return None
 
     return PromptData(name, title, description, arguments, post.content)
 
@@ -169,8 +142,7 @@ def scan_markdown_files(
         try:
             content = fs.read_text(md_file)
             prompt_data = _parse_markdown_file(md_file, folder, content, logger=logger)
-            if prompt_data:
-                yield prompt_data
+            yield prompt_data
         except Exception as e:
             logger.warning(f"failed to process {md_file}: {e}")
             continue

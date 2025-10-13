@@ -7,6 +7,7 @@ from .config import Config
 from .file.scan import scan_markdown_files
 from .loader import get_folder_path
 from .prompts.markdown import MarkdownPrompt
+from .formatters import get_formatter
 
 
 def main():
@@ -16,12 +17,13 @@ def main():
 
     try:
         folder_path = get_folder_path(config)
+        formatter = get_formatter(config.formatter)
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
 
     for prompt_data in scan_markdown_files(folder_path):
-        prompt = MarkdownPrompt.from_prompt_data(prompt_data)
+        prompt = MarkdownPrompt.from_prompt_data(prompt_data, formatter)
         mcp.add_prompt(prompt)
 
     mcp.run()
