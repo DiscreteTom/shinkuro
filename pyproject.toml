@@ -1,7 +1,7 @@
 [project]
 name = "shinkuro"
 version = "0.3.3"
-description = "Prompt synchronization MCP server"
+description = "Universal prompt loader MCP server"
 readme = "README.md"
 requires-python = ">=3.13"
 authors = [

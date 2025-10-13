@@ -1,11 +1,11 @@
-# Shinkuro - Prompt synchronization MCP server
+# Shinkuro - Universal prompt loader MCP server
 
 [![PyPI - Version](https://img.shields.io/pypi/v/shinkuro)](https://pypi.org/project/shinkuro/)
 ![Codecov](https://img.shields.io/codecov/c/github/DiscreteTom/shinkuro)
 
 Loads markdown files from a local folder or git repository and serves them as [MCP Prompts](https://modelcontextprotocol.io/specification/2025-06-18/server/prompts).
 
-Useful when you need to share prompts across organizations.
+Useful for loading prompts from various sources and formats into your MCP-enabled applications, and sharing prompts across organizations.
 
 ## Usage
 
@@ -147,12 +147,12 @@ Say: Hello {user}! Welcome to {project}. Hope you enjoy your stay!
 
 Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved.
 
-**Different Variable Formats:**
-
-- `VARIABLE_FORMAT=brace` (default): `{user}`, `{project}`
-- `VARIABLE_FORMAT=dollar`: `$user`, `$project`
-
 Use `{{var}}` (double brackets) to escape and display literal brackets when using brace formatter.
+
+> **Different Variable Formats:**
+>
+> - `VARIABLE_FORMAT=brace` (default): `{user}`, `{project}`
+> - `VARIABLE_FORMAT=dollar`: `$user`, `$project`
 
 ## Example Prompt Repositories
 
