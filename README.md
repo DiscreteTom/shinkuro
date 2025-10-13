@@ -52,6 +52,31 @@ Add to your MCP client configuration:
 
 > Private repositories are supported, e.g. `"GIT_URL": "git@github.com:DiscreteTom/shinkuro.git"` (with SSH keys), `"GIT_URL": "https://<username>:<PAT>@github.com/owner/repo.git"` (with personal access token)
 
+### Use with [Spec-Kit](https://github.com/github/spec-kit)
+
+First, move spec-kit prompts into `./.shinkuro/prompts` folder.
+
+Then add to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "shinkuro": {
+      "command": "uvx",
+      "args": ["shinkuro"],
+      "env": {
+        "FOLDER": "./.shinkuro/prompts",
+        "VARIABLE_FORMAT": "dollar",
+        "AUTO_DISCOVER_ARGS": "true",
+        "SKIP_FRONTMATTER": "true"
+      }
+    }
+  }
+}
+```
+
+This will expose spec-kit instructions as MCP prompts.
+
 ### Environment Variables
 
 - `FOLDER`: Path to local folder containing markdown files, or subfolder within git repo
@@ -120,9 +145,10 @@ arguments:
 Say: Hello {user}! Welcome to {project}. Hope you enjoy your stay!
 ```
 
-Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved. 
+Variables like `{user}` and `{project}` will be replaced with actual values when the prompt is retrieved.
 
 **Different Variable Formats:**
+
 - `VARIABLE_FORMAT=brace` (default): `{user}`, `{project}`
 - `VARIABLE_FORMAT=dollar`: `$user`, `$project`
 
