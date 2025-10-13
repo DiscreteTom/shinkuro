@@ -61,6 +61,7 @@ Add to your MCP client configuration:
 - `VARIABLE_FORMAT`: Template variable format (optional, defaults to `brace`)
   - `brace`: Use `{var}` syntax (default)
   - `dollar`: Use `$var` syntax
+- `AUTO_DISCOVER_ARGS`: Auto-discover template variables as required arguments (optional, defaults to `false`)
 
 ## Prompt Loading
 

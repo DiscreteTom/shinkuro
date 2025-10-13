@@ -65,6 +65,7 @@ def test_config_dataclass_creation():
         cache_dir=Path("/cache"),
         auto_pull=True,
         formatter=FormatterType.DOLLAR,
+        auto_discover_args=True,
     )
 
     assert config.folder == "/test"
@@ -72,6 +73,7 @@ def test_config_dataclass_creation():
     assert config.cache_dir == Path("/cache")
     assert config.auto_pull is True
     assert config.formatter == FormatterType.DOLLAR
+    assert config.auto_discover_args is True
 
 
 def test_config_variable_format_brace(monkeypatch):
@@ -99,3 +101,21 @@ def test_config_variable_format_invalid(monkeypatch):
 
     with pytest.raises(ValueError, match="Invalid VARIABLE_FORMAT value: invalid"):
         Config.from_env()
+
+
+def test_config_auto_discover_args_default(monkeypatch):
+    monkeypatch.delenv("FOLDER", raising=False)
+    monkeypatch.delenv("GIT_URL", raising=False)
+    monkeypatch.delenv("AUTO_DISCOVER_ARGS", raising=False)
+
+    config = Config.from_env()
+    assert config.auto_discover_args is False
+
+
+def test_config_auto_discover_args_true(monkeypatch):
+    monkeypatch.delenv("FOLDER", raising=False)
+    monkeypatch.delenv("GIT_URL", raising=False)
+    monkeypatch.setenv("AUTO_DISCOVER_ARGS", "true")
+
+    config = Config.from_env()
+    assert config.auto_discover_args is True

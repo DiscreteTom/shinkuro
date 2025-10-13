@@ -23,7 +23,9 @@ def main():
         sys.exit(1)
 
     for prompt_data in scan_markdown_files(folder_path):
-        prompt = MarkdownPrompt.from_prompt_data(prompt_data, formatter)
+        prompt = MarkdownPrompt.from_prompt_data(
+            prompt_data, formatter, config.auto_discover_args
+        )
         mcp.add_prompt(prompt)
 
     mcp.run()

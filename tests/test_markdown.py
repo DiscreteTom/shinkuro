@@ -175,3 +175,39 @@ async def test_markdown_prompt_validation_mismatched_parameters():
         ValueError, match="Content parameters .* don't match provided arguments"
     ):
         MarkdownPrompt.from_prompt_data(prompt_data, BraceFormatter())
+
+
+@pytest.mark.asyncio
+async def test_markdown_prompt_auto_discover_args():
+    prompt_data = create_prompt_data(
+        arguments=[],  # No arguments in frontmatter
+        content="Hello {user} from {project}!",
+    )
+
+    prompt = MarkdownPrompt.from_prompt_data(
+        prompt_data, BraceFormatter(), auto_discover_args=True
+    )
+
+    assert prompt.arguments is not None
+    assert len(prompt.arguments) == 2
+    assert prompt.arguments[0].name == "project"  # sorted order
+    assert prompt.arguments[1].name == "user"
+    assert prompt.arguments[0].required is True
+    assert prompt.arguments[1].required is True
+    assert prompt.arg_defaults == {}
+
+
+@pytest.mark.asyncio
+async def test_markdown_prompt_auto_discover_args_with_existing_args():
+    prompt_data = create_prompt_data(
+        arguments=[create_argument("user", "User name", None)],
+        content="Hello {user}!",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="prompt_data.arguments must be empty when auto_discover_args is enabled",
+    ):
+        MarkdownPrompt.from_prompt_data(
+            prompt_data, BraceFormatter(), auto_discover_args=True
+        )

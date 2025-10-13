@@ -16,6 +16,7 @@ class Config:
     cache_dir: Path
     auto_pull: bool
     formatter: FormatterType
+    auto_discover_args: bool
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -40,4 +41,6 @@ class Config:
             cache_dir=cache_dir,
             auto_pull=os.getenv("AUTO_PULL", "false").lower() == "true",
             formatter=formatter,
+            auto_discover_args=os.getenv("AUTO_DISCOVER_ARGS", "false").lower()
+            == "true",
         )

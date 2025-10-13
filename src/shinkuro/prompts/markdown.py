@@ -26,33 +26,58 @@ class MarkdownPrompt(Prompt):
 
     @classmethod
     def from_prompt_data(
-        cls, prompt_data: PromptData, formatter: FormatterInterface
+        cls,
+        prompt_data: PromptData,
+        formatter: FormatterInterface,
+        auto_discover_args: bool = False,
     ) -> "MarkdownPrompt":
         """Create MarkdownPrompt from PromptData with validation."""
-        # Validate arguments
-        for arg in prompt_data.arguments:
-            if not validate_variable_name(arg.name):
+        if auto_discover_args:
+            # Auto-discover arguments from template variables, ignore frontmatter args
+            if prompt_data.arguments:
                 raise ValueError(
-                    f"Argument name '{arg.name}' contains invalid characters"
+                    "prompt_data.arguments must be empty when auto_discover_args is enabled"
+                )
+            discovered_params = formatter.extract_parameters(prompt_data.content)
+            arguments = [
+                PromptArgument(
+                    name=param,
+                    description="",
+                    required=True,
+                )
+                for param in sorted(discovered_params)
+            ]
+            arg_defaults = {}
+        else:
+            # Validate arguments
+            for arg in prompt_data.arguments:
+                if not validate_variable_name(arg.name):
+                    raise ValueError(
+                        f"Argument name '{arg.name}' contains invalid characters"
+                    )
+
+            # Validate content and get discovered parameters
+            discovered_params = formatter.extract_parameters(prompt_data.content)
+            provided_params = {arg.name for arg in prompt_data.arguments}
+
+            if discovered_params != provided_params:
+                raise ValueError(
+                    f"Content parameters {discovered_params} don't match provided arguments {provided_params}"
                 )
 
-        # Validate content and get discovered parameters
-        discovered_params = formatter.extract_parameters(prompt_data.content)
-        provided_params = {arg.name for arg in prompt_data.arguments}
-
-        if discovered_params != provided_params:
-            raise ValueError(
-                f"Content parameters {discovered_params} don't match provided arguments {provided_params}"
-            )
-
-        arguments = [
-            PromptArgument(
-                name=arg.name,
-                description=arg.description,
-                required=arg.default is None,
-            )
-            for arg in prompt_data.arguments
-        ]
+            arguments = [
+                PromptArgument(
+                    name=arg.name,
+                    description=arg.description,
+                    required=arg.default is None,
+                )
+                for arg in prompt_data.arguments
+            ]
+            arg_defaults = {
+                arg.name: arg.default
+                for arg in prompt_data.arguments
+                if arg.default is not None
+            }
 
         return cls(
             formatter=formatter,
@@ -62,11 +87,7 @@ class MarkdownPrompt(Prompt):
             arguments=arguments,
             tags={"shinkuro"},
             content=prompt_data.content,
-            arg_defaults={
-                arg.name: arg.default
-                for arg in prompt_data.arguments
-                if arg.default is not None
-            },
+            arg_defaults=arg_defaults,
         )
 
     async def render(
