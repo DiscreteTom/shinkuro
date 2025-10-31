@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CLI parameters support with `--help` and `--version` options
+- Environment variables displayed in CLI help with descriptions
+- Support for all configuration options via CLI flags (--folder, --git-url, --cache-dir, etc.)
+
 ## [0.3.3] - 2025-10-13
 
 ### Added
