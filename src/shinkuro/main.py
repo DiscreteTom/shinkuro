@@ -69,9 +69,7 @@ def app(
     ] = False,
     version: Annotated[
         Optional[bool],
-        typer.Option(
-            "--version", callback=version_callback, help="Show version and exit"
-        ),
+        typer.Option(callback=version_callback, help="Show version and exit"),
     ] = None,
 ):
     """Shinkuro - Universal prompt loader MCP server"""
