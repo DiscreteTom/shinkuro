@@ -11,6 +11,32 @@ Useful for loading prompts from various sources and formats into your MCP-enable
 
 **IMPORTANT**: make sure your MCP client supports the MCP Prompts capability. See the [feature support matrix](https://modelcontextprotocol.io/clients#feature-support-matrix).
 
+### Full Usage
+
+<details>
+
+<summary><code>uvx shinkuro --help</code></summary>
+
+```sh
+ Usage: shinkuro [OPTIONS]
+
+ Shinkuro - Universal prompt loader MCP server
+
+╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --folder                    TEXT            Path to local folder containing markdown files, or subfolder within git repo [env var: FOLDER]  │
+│ --git-url                   TEXT            Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials) [env var: GIT_URL]    │
+│ --cache-dir                 TEXT            Directory to cache remote repositories [env var: CACHE_DIR] [default: ~/.shinkuro/remote]       │
+│ --auto-pull                                 Whether to refresh local cache on startup [env var: AUTO_PULL]                                  │
+│ --variable-format           [brace|dollar]  Template variable format [env var: VARIABLE_FORMAT] [default: brace]                            │
+│ --auto-discover-args                        Auto-discover template variables as required arguments [env var: AUTO_DISCOVER_ARGS]            │
+│ --skip-frontmatter                          Skip frontmatter processing and use raw markdown content [env var: SKIP_FRONTMATTER]            │
+│ --version                                   Show version and exit                                                                           │
+│ --help                                      Show this message and exit.                                                                     │
+╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+</details>
+
 ### Local Files
 
 Add to your MCP client configuration:
@@ -54,6 +80,10 @@ Add to your MCP client configuration:
 
 ### Use with [Spec-Kit](https://github.com/github/spec-kit)
 
+<details>
+
+<summary>Expand</summary>
+
 First, move spec-kit prompts into `./.shinkuro/prompts` folder.
 
 Then add to your MCP client configuration:
@@ -77,17 +107,7 @@ Then add to your MCP client configuration:
 
 This will expose spec-kit instructions as MCP prompts.
 
-### Environment Variables
-
-- `FOLDER`: Path to local folder containing markdown files, or subfolder within git repo
-- `GIT_URL`: Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials)
-- `CACHE_DIR`: Directory to cache remote repositories (optional, defaults to `~/.shinkuro/remote`)
-- `AUTO_PULL`: Whether to refresh local cache on startup (optional, defaults to `false`)
-- `VARIABLE_FORMAT`: Template variable format (optional, defaults to `brace`)
-  - `brace`: Use `{var}` syntax (default)
-  - `dollar`: Use `$var` syntax
-- `AUTO_DISCOVER_ARGS`: Auto-discover template variables as required arguments (optional, defaults to `false`)
-- `SKIP_FRONTMATTER`: Skip frontmatter processing and use raw markdown content (optional, defaults to `false`)
+</details>
 
 ## Prompt Loading
 
@@ -151,8 +171,8 @@ Use `{{var}}` (double brackets) to escape and display literal brackets when usin
 
 > **Different Variable Formats:**
 >
-> - `VARIABLE_FORMAT=brace` (default): `{user}`, `{project}`
-> - `VARIABLE_FORMAT=dollar`: `$user`, `$project`
+> - `brace` (default): `{user}`, `{project}`
+> - `dollar`: `$user`, `$project`
 
 ## Example Prompt Repositories
 
