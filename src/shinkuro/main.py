@@ -67,9 +67,11 @@ def app(
             help="Skip frontmatter processing and use raw markdown content",
         ),
     ] = False,
-    version: Annotated[
+    _version: Annotated[
         Optional[bool],
-        typer.Option(callback=version_callback, help="Show version and exit"),
+        typer.Option(
+            "--version", callback=version_callback, help="Show version and exit"
+        ),
     ] = None,
 ):
     """Shinkuro - Universal prompt loader MCP server"""
