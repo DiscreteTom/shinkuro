@@ -7,6 +7,10 @@ Loads markdown files from a local folder or git repository and serves them as [M
 
 Useful for loading prompts from various sources and formats into your MCP-enabled applications, and sharing prompts across organizations.
 
+<a href="https://glama.ai/mcp/servers/@DiscreteTom/shinkuro">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@DiscreteTom/shinkuro/badge" alt="Shinkuro MCP server" />
+</a>
+
 ## Usage
 
 **IMPORTANT**: make sure your MCP client supports the MCP Prompts capability. See the [feature support matrix](https://modelcontextprotocol.io/clients#feature-support-matrix).
