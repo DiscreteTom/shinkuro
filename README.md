@@ -27,17 +27,17 @@ Useful for loading prompts from various sources and formats into your MCP-enable
 
  Shinkuro - Universal prompt loader MCP server
 
-╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --folder                    TEXT            Path to local folder containing markdown files, or subfolder within git repo [env var: FOLDER]  │
-│ --git-url                   TEXT            Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials) [env var: GIT_URL]    │
-│ --cache-dir                 TEXT            Directory to cache remote repositories [env var: CACHE_DIR] [default: ~/.shinkuro/remote]       │
-│ --auto-pull                                 Whether to refresh local cache on startup [env var: AUTO_PULL]                                  │
-│ --variable-format           [brace|dollar]  Template variable format [env var: VARIABLE_FORMAT] [default: brace]                            │
-│ --auto-discover-args                        Auto-discover template variables as required arguments [env var: AUTO_DISCOVER_ARGS]            │
-│ --skip-frontmatter                          Skip frontmatter processing and use raw markdown content [env var: SKIP_FRONTMATTER]            │
-│ --version                                   Show version and exit                                                                           │
-│ --help                                      Show this message and exit.                                                                     │
-╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --folder              TEXT            Path to local folder containing markdown files, or subfolder within git repo [env var: FOLDER] │
+│ --git-url             TEXT            Git repository URL (supports GitHub, GitLab, SSH, HTTPS with credentials) [env var: GIT_URL]   │
+│ --cache-dir           TEXT            Directory to cache remote repositories [env var: CACHE_DIR] [default: ~/.shinkuro/remote]      │
+│ --auto-pull                           Whether to refresh local cache on startup [env var: AUTO_PULL]                                 │
+│ --variable-format     [brace|dollar]  Template variable format [env var: VARIABLE_FORMAT] [default: brace]                           │
+│ --auto-discover-args                  Auto-discover template variables as required arguments [env var: AUTO_DISCOVER_ARGS]           │
+│ --skip-frontmatter                    Skip frontmatter processing and use raw markdown content [env var: SKIP_FRONTMATTER]           │
+│ --version                             Show version and exit                                                                          │
+│ --help                                Show this message and exit.                                                                    │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 </details>
