@@ -2,7 +2,7 @@
 """Check that __init__.py version matches pyproject.toml version."""
 
 import sys
-import tomllib
+import tomli
 from pathlib import Path
 
 
@@ -10,7 +10,7 @@ def main():
     # Read version from pyproject.toml
     pyproject_path = Path("pyproject.toml")
     with open(pyproject_path, "rb") as f:
-        pyproject = tomllib.load(f)
+        pyproject = tomli.load(f)
     pyproject_version = pyproject["project"]["version"]
 
     # Read version from __init__.py
