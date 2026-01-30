@@ -3,6 +3,9 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/shinkuro)](https://pypi.org/project/shinkuro/)
 ![Codecov](https://img.shields.io/codecov/c/github/DiscreteTom/shinkuro)
 
+> [!WARNING]
+> This Python implementation is deprecated. Please use the Rust implementation instead: https://github.com/DiscreteTom/shinkuro-rs
+
 Loads markdown files from a local folder or git repository and serves them as [MCP Prompts](https://modelcontextprotocol.io/specification/2025-06-18/server/prompts).
 
 Useful for loading prompts from various sources and formats into your MCP-enabled applications, and sharing prompts across organizations.
